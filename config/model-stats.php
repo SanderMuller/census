@@ -55,7 +55,7 @@ return [
     | `ability` of null means the route middleware is already the gate.
     |
     | `reads_schema` marks the developer audience: it sees every model, column
-    | and relation. Every other audience sees only what a `#[ModelStats]` or
+    | and relation. Every other audience sees only what a `#[StatsFor]` or
     | `#[StatsForColumn]` attribute published to it, so a newly added model or
     | column is invisible to them until someone opts it in.
     |
@@ -67,6 +67,54 @@ return [
             'reads_schema' => true,
             'ability' => null,
         ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Model, column and relation selection
+    |--------------------------------------------------------------------------
+    |
+    | The rule, applied identically at all three levels:
+    |
+    |     whitelist = config_whitelist union attribute_whitelist
+    |     usable    = (whitelist or everything) minus both blacklists
+    |
+    | The two whitelists merge into one list, so one entry anywhere makes that
+    | level opt-in. An empty merge means everything. Narrowing runs last and is
+    | absolute: nothing re-includes a blacklisted name, for any audience.
+    |
+    | Column and relation entries are `[modelPattern, targetPattern]` pairs
+    | rather than delimited strings, because a fully qualified class name
+    | contains backslashes and no separator character is safe. `*` wildcards
+    | work on either side.
+    |
+    */
+
+    'models' => [
+        'whitelist' => [],
+        'blacklist' => [],
+    ],
+
+    /*
+     * Conservative defaults: a distribution over a credential column is the one leak worth blocking
+     * out of the box. They stay narrow on purpose. A wider glob such as `*token*` would also swallow
+     * `aggregate_used_tokens`, which is a legitimate metric — so widen these per application rather
+     * than reaching for the broadest pattern that fits.
+     */
+    'columns' => [
+        'whitelist' => [],
+        'blacklist' => [
+            ['*', 'password'],
+            ['*', '*_password'],
+            ['*', 'remember_token'],
+            ['*', '*_token'],
+            ['*', '*_secret'],
+        ],
+    ],
+
+    'relations' => [
+        'whitelist' => [],
+        'blacklist' => [],
     ],
 
     'timeout_ms' => 3000,

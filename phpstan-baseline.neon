@@ -7,12 +7,6 @@ parameters:
 			path: src/Audiences/AudienceResolver.php
 
 		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 1
-			path: src/Http/Controllers/ShowModelStatsController.php
-
-		-
 			rawMessage: Provide more specific return type "Illuminate\View\View" over abstract one
 			identifier: typePerfect.narrowReturnObjectType
 			count: 1
@@ -91,25 +85,13 @@ parameters:
 			path: src/Introspection/ModelInspector.php
 
 		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 2
-			path: src/ModelStatsServiceProvider.php
-
-		-
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
 			count: 3
 			path: src/ModelStatsServiceProvider.php
 
 		-
-			rawMessage: 'Parameter #1 $array of function array_values expects array<T>, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: src/ModelStatsServiceProvider.php
-
-		-
-			rawMessage: 'Parameter #1 $configured of class SanderMuller\ModelStats\Audiences\AudienceResolver constructor expects array<string, array<string, mixed>>, mixed given.'
+			rawMessage: 'Parameter #1 $configured of class SanderMuller\ModelStats\Audiences\AudienceResolver constructor expects array<string, array<string, mixed>>, array<mixed> given.'
 			identifier: argument.type
 			count: 1
 			path: src/ModelStatsServiceProvider.php
@@ -121,13 +103,7 @@ parameters:
 			path: src/ModelStatsServiceProvider.php
 
 		-
-			rawMessage: 'Parameter #1 $namespaces of class SanderMuller\ModelStats\Integrations\NovaResourceLocator constructor expects list<string>, list<mixed> given.'
-			identifier: argument.type
-			count: 1
-			path: src/ModelStatsServiceProvider.php
-
-		-
-			rawMessage: 'Parameter #1 $sourceRoots of class SanderMuller\ModelStats\Introspection\ModelFinder constructor expects array<string, string>, mixed given.'
+			rawMessage: 'Parameter #1 $sourceRoots of class SanderMuller\ModelStats\Introspection\ModelFinder constructor expects array<string, string>, array<mixed> given.'
 			identifier: argument.type
 			count: 1
 			path: src/ModelStatsServiceProvider.php

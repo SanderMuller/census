@@ -29,6 +29,7 @@ final readonly class ModelBlueprint
         public ?string $description = null,
         public array $audiences = [],
         public array $publishedColumns = [],
+        public ?int $cacheMinutes = null,
     ) {}
 
     public function displayName(): string

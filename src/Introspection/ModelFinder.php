@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use ReflectionClass;
+use SanderMuller\ModelStats\Attributes\StatsExclude;
+use SanderMuller\ModelStats\Attributes\StatsInclude;
+use SanderMuller\ModelStats\Selection\Selector;
 use Symfony\Component\Finder\Finder;
 use Throwable;
 
@@ -21,8 +24,14 @@ final class ModelFinder
 
     /**
      * @param  array<string, string>  $sourceRoots  Namespace prefix => directory holding those classes.
+     * @param  list<string>  $whitelist  Model classes config whitelists.
+     * @param  list<string>  $blacklist  Model classes config blacklists.
      */
-    public function __construct(private readonly array $sourceRoots) {}
+    public function __construct(
+        private readonly array $sourceRoots,
+        private readonly array $whitelist = [],
+        private readonly array $blacklist = [],
+    ) {}
 
     /**
      * Slug => reference, sorted by slug.
@@ -38,12 +47,14 @@ final class ModelFinder
         // One listing for all of them. Asking `Schema::hasTable()` per model was 99 queries.
         $tables = array_flip(Schema::getTableListing(schemaQualified: false));
 
-        $models = [];
-        foreach ($this->candidateClasses() as $class) {
-            if (! is_subclass_of($class, Model::class)) {
-                continue;
-            }
+        $candidates = array_values(array_filter(
+            $this->candidateClasses(),
+            static fn (string $class): bool => is_subclass_of($class, Model::class),
+        ));
 
+        $models = [];
+        foreach ($this->selectorFor($candidates)->apply($candidates) as $class) {
+            /** @var class-string<Model> $class */
             $reference = $this->reference($class, $tables);
             if ($reference instanceof ModelReference) {
                 $models[$reference->slug] = $reference;
@@ -77,6 +88,37 @@ final class ModelFinder
         return collect(explode('\\', $relative))
             ->map(static fn (string $segment): string => Str::kebab($segment))
             ->implode('.');
+    }
+
+    /**
+     * Config and attributes both feed one `Selector`. The attribute side is read here rather than in
+     * `ModelInspector` because selection decides which models get inspected at all.
+     *
+     * @param  list<class-string<Model>>  $candidates
+     */
+    private function selectorFor(array $candidates): Selector
+    {
+        $whitelist = [];
+        $blacklist = [];
+
+        foreach ($candidates as $class) {
+            $reflection = new ReflectionClass($class);
+
+            if ($reflection->getAttributes(StatsInclude::class) !== []) {
+                $whitelist[] = $class;
+            }
+
+            if ($reflection->getAttributes(StatsExclude::class) !== []) {
+                $blacklist[] = $class;
+            }
+        }
+
+        return new Selector(
+            configWhitelist: array_values($this->whitelist),
+            configBlacklist: array_values($this->blacklist),
+            attributeWhitelist: $whitelist,
+            attributeBlacklist: $blacklist,
+        );
     }
 
     /**

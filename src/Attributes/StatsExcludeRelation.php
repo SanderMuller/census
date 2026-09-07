@@ -8,7 +8,12 @@ use Attribute;
  * Blacklists one relation. Gone for every audience, whatever any whitelist says.
  */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
-final readonly class StatsExcludeRelation
+final readonly class StatsExcludeRelation implements NamesTarget
 {
     public function __construct(public string $name) {}
+
+    public function target(): string
+    {
+        return $this->name;
+    }
 }

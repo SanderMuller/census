@@ -4,13 +4,10 @@ namespace SanderMuller\ModelStats\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Date;
 use SanderMuller\ModelStats\Audiences\Audience;
 use SanderMuller\ModelStats\Audiences\AudienceGate;
 use SanderMuller\ModelStats\Audiences\AudienceResolver;
 use SanderMuller\ModelStats\Integrations\NovaResourceLocator;
-use SanderMuller\ModelStats\Introspection\ModelBlueprint;
 use SanderMuller\ModelStats\Introspection\ModelFinder;
 use SanderMuller\ModelStats\Introspection\ModelInspector;
 use SanderMuller\ModelStats\Introspection\ModelReference;
@@ -52,34 +49,14 @@ final readonly class ShowModelStatsController
 
         $blueprint = $this->gate->restrict($blueprint, $audience);
 
-        if ($request->query('fresh') !== null) {
-            Cache::forget($this->cacheKey($blueprint, $audience));
-        }
-
-        $cached = Cache::remember(
-            $this->cacheKey($blueprint, $audience),
-            now()->addMinutes((int) config('model-stats.cache_minutes', 15)),
-            fn (): array => [
-                'calculated_at' => now()->toIso8601String(),
-                'stats' => $this->calculator->calculate($blueprint),
-            ],
-        );
+        $cached = $this->calculator->cached($blueprint, $audience->key, $request->query('fresh') !== null);
 
         return view('model-stats::show', [
             'blueprint' => $blueprint,
             'audience' => $audience,
-            'groups' => collect($cached['stats'])->groupBy(static fn (Stat $stat): string => $stat->group),
-            'calculatedAt' => Date::parse($cached['calculated_at']),
+            'groups' => collect($cached->stats)->groupBy(static fn (Stat $stat): string => $stat->group),
+            'calculatedAt' => $cached->calculatedAt,
             'novaUrl' => $audience->readsSchema ? $this->novaLocator->urlFor($reference->class) : null,
         ]);
-    }
-
-    /**
-     * The audience is part of the key. Two audiences see different stats for the same model, so one
-     * cache entry serving both would hand a support user a developer's numbers.
-     */
-    private function cacheKey(ModelBlueprint $blueprint, Audience $audience): string
-    {
-        return "model-stats.{$audience->key}.{$blueprint->slug}";
     }
 }

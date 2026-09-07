@@ -13,9 +13,17 @@ use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionNamedType;
+use SanderMuller\ModelStats\Attributes\NamesTarget;
+use SanderMuller\ModelStats\Attributes\StatsExcludeColumn;
+use SanderMuller\ModelStats\Attributes\StatsExcludeRelation;
 use SanderMuller\ModelStats\Attributes\StatsFor;
 use SanderMuller\ModelStats\Attributes\StatsForColumn;
+use SanderMuller\ModelStats\Attributes\StatsIncludeColumn;
+use SanderMuller\ModelStats\Attributes\StatsIncludeRelation;
+use SanderMuller\ModelStats\Attributes\StatsOptions;
 use SanderMuller\ModelStats\Enums\ColumnStatKind;
+use SanderMuller\ModelStats\Selection\Patterns;
+use SanderMuller\ModelStats\Selection\Selector;
 use Throwable;
 
 /**
@@ -34,7 +42,15 @@ final readonly class ModelInspector
 
     private const array BOOLEAN_CASTS = ['bool', 'boolean'];
 
-    public function __construct(private ModelFinder $finder) {}
+    /**
+     * @param  array{whitelist: list<array{0: string, 1: string}>, blacklist: list<array{0: string, 1: string}>}  $columnPatterns
+     * @param  array{whitelist: list<array{0: string, 1: string}>, blacklist: list<array{0: string, 1: string}>}  $relationPatterns
+     */
+    public function __construct(
+        private ModelFinder $finder,
+        private array $columnPatterns = ['whitelist' => [], 'blacklist' => []],
+        private array $relationPatterns = ['whitelist' => [], 'blacklist' => []],
+    ) {}
 
     /**
      * @param  class-string<Model>  $class
@@ -45,11 +61,31 @@ final readonly class ModelInspector
         $table = $model->getTable();
         $schema = Schema::connection($model->getConnectionName());
 
+        $reflection = new ReflectionClass($class);
+
         $foreignKeyColumns = $this->foreignKeyColumns($schema->getForeignKeys($table));
-        $columns = $this->columns($model, $schema->getColumns($table), $foreignKeyColumns);
+        $columns = $this->select(
+            $this->columns($model, $schema->getColumns($table), $foreignKeyColumns),
+            static fn (ColumnFacts $column): string => $column->name,
+            $this->columnPatterns,
+            StatsIncludeColumn::class,
+            StatsExcludeColumn::class,
+            $reflection,
+            $class,
+        );
+
+        $relations = $this->select(
+            $this->relations($model),
+            static fn (RelationFacts $relation): string => $relation->name,
+            $this->relationPatterns,
+            StatsIncludeRelation::class,
+            StatsExcludeRelation::class,
+            $reflection,
+            $class,
+        );
+
         $columnNames = array_map(static fn (ColumnFacts $column): string => $column->name, $columns);
 
-        $reflection = new ReflectionClass($class);
         $published = $this->publishedColumns($reflection);
         $declared = ($reflection->getAttributes(StatsFor::class)[0] ?? null)?->newInstance();
 
@@ -61,12 +97,70 @@ final readonly class ModelInspector
             createdAtColumn: $this->presentColumn($model->getCreatedAtColumn(), $columnNames),
             deletedAtColumn: $this->presentColumn($this->softDeleteColumn($model), $columnNames),
             columns: $columns,
-            relations: $this->relations($model),
+            relations: $relations,
             label: $declared?->label,
             description: $declared?->description,
             audiences: array_values($declared->audiences ?? []),
             publishedColumns: $published,
+            cacheMinutes: ($reflection->getAttributes(StatsOptions::class)[0] ?? null)?->newInstance()->cacheMinutes,
         );
+    }
+
+    /**
+     * Runs the resolution rule over one model's columns or relations. Config contributes through
+     * `[modelPattern, targetPattern]` pairs, attributes name one target each, and both feed the same
+     * `Selector` the model list goes through — so the rule is stated once and applied at every level.
+     *
+     * @template TFact of ColumnFacts|RelationFacts
+     *
+     * @param  list<TFact>  $facts
+     * @param  callable(TFact): string  $name
+     * @param  array{whitelist: list<array{0: string, 1: string}>, blacklist: list<array{0: string, 1: string}>}  $patterns
+     * @param  class-string<NamesTarget>  $includeAttribute
+     * @param  class-string<NamesTarget>  $excludeAttribute
+     * @param  ReflectionClass<Model>  $reflection
+     * @param  class-string<Model>  $class
+     * @return list<TFact>
+     */
+    private function select(
+        array $facts,
+        callable $name,
+        array $patterns,
+        string $includeAttribute,
+        string $excludeAttribute,
+        ReflectionClass $reflection,
+        string $class,
+    ): array {
+        $candidates = array_map($name, $facts);
+
+        $selector = new Selector(
+            configWhitelist: Patterns::match($patterns['whitelist'], $class, $candidates),
+            configBlacklist: Patterns::match($patterns['blacklist'], $class, $candidates),
+            attributeWhitelist: $this->namedBy($reflection, $includeAttribute),
+            attributeBlacklist: $this->namedBy($reflection, $excludeAttribute),
+        );
+
+        $usable = $selector->apply($candidates);
+
+        return array_values(array_filter(
+            $facts,
+            static fn (ColumnFacts|RelationFacts $fact): bool => in_array($name($fact), $usable, strict: true),
+        ));
+    }
+
+    /**
+     * @param  ReflectionClass<Model>  $reflection
+     * @param  class-string<NamesTarget>  $attribute
+     * @return list<string>
+     */
+    private function namedBy(ReflectionClass $reflection, string $attribute): array
+    {
+        $names = [];
+        foreach ($reflection->getAttributes($attribute) as $instance) {
+            $names[] = $instance->newInstance()->target();
+        }
+
+        return $names;
     }
 
     /**

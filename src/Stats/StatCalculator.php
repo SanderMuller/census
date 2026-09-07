@@ -3,10 +3,12 @@
 namespace SanderMuller\ModelStats\Stats;
 
 use BackedEnum;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as EloquentQueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use SanderMuller\ModelStats\Enums\ColumnStatKind;
 use SanderMuller\ModelStats\Introspection\ColumnFacts;
@@ -16,7 +18,7 @@ use Throwable;
 
 /**
  * The rule table: which stat each schema signal earns. Nothing here is configured per model —
- * a column's cast or a relation's type decides the stat, the same way for all 141 models.
+ * a column's cast or a relation's type decides the stat, the same way for every model.
  *
  * Global scopes stay on so a count matches what the application itself would read; only the
  * soft-delete scope is lifted, because "how many rows are trashed" is one of the stats.
@@ -32,7 +34,34 @@ final readonly class StatCalculator
     public function __construct(
         private int $queryTimeoutMs = 3000,
         private int $breakdownLimit = 25,
+        private int $cacheMinutes = 15,
     ) {}
+
+    /**
+     * Computing and caching live together on purpose. Caching used to sit in the show controller, which
+     * left every other caller — a dashboard reading several models on one page — with no cache at all
+     * and no way to honour a model's own lifetime. The audience is part of the key because two
+     * audiences see different stats for the same model.
+     */
+    public function cached(ModelBlueprint $blueprint, string $audienceKey, bool $fresh = false): CachedStats
+    {
+        $key = "model-stats.{$audienceKey}.{$blueprint->slug}";
+
+        if ($fresh) {
+            Cache::forget($key);
+        }
+
+        $entry = Cache::remember(
+            $key,
+            now()->addMinutes($blueprint->cacheMinutes ?? $this->cacheMinutes),
+            fn (): array => [
+                'calculated_at' => now()->toIso8601String(),
+                'stats' => $this->calculate($blueprint),
+            ],
+        );
+
+        return new CachedStats($entry['stats'], Carbon::parse($entry['calculated_at']));
+    }
 
     /**
      * @return list<Stat>
@@ -109,8 +138,8 @@ final readonly class StatCalculator
     }
 
     /**
-     * One aggregate over every boolean column. `Video` has 55 of them — a `GROUP BY` each would
-     * be 55 scans of the same table for information a single row of SUMs already carries.
+     * One aggregate over every boolean column. A model with dozens of them would otherwise cost a
+     * `GROUP BY` each: that many scans of the same table for what one row of SUMs already carries.
      *
      * @param  list<ColumnFacts>  $columns
      */
@@ -165,8 +194,8 @@ final readonly class StatCalculator
             }
         }
 
-        // A model like `Video` has 29 relations and most read zero on a given database. Sorting by
-        // the largest number in the card floats the ones carrying data to the top of the grid.
+        // A wide model has dozens of relations and most read zero on a given database. Sorting by
+        // the telling number floats the ones carrying data to the top of the grid.
         usort($stats, static fn (Stat $a, Stat $b): int => $b->signal() <=> $a->signal());
 
         return $stats;
