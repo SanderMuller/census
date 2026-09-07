@@ -11,7 +11,7 @@ use Attribute;
  * or a column to one — can never quietly widen who reads it.
  */
 #[Attribute(Attribute::TARGET_CLASS)]
-final readonly class ModelStats
+final readonly class StatsFor
 {
     /**
      * @param  list<string>  $audiences  Audience keys from `model-stats.audiences`.

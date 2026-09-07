@@ -56,7 +56,7 @@ return [
     |
     | `reads_schema` marks the developer audience: it sees every model, column
     | and relation. Every other audience sees only what a `#[ModelStats]` or
-    | `#[PublishedColumn]` attribute published to it, so a newly added model or
+    | `#[StatsForColumn]` attribute published to it, so a newly added model or
     | column is invisible to them until someone opts it in.
     |
     */

@@ -11,7 +11,7 @@ use Attribute;
  * non-developer audience: a column nobody published is a column nobody outside development sees.
  */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
-final readonly class PublishedColumn
+final readonly class StatsForColumn
 {
     /**
      * @param  list<string>  $audiences  Audience keys from `model-stats.audiences`.

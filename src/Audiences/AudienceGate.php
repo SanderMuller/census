@@ -4,7 +4,7 @@ namespace SanderMuller\ModelStats\Audiences;
 
 use Illuminate\Database\Eloquent\Model;
 use ReflectionClass;
-use SanderMuller\ModelStats\Attributes\ModelStats;
+use SanderMuller\ModelStats\Attributes\StatsFor;
 use SanderMuller\ModelStats\Introspection\ColumnFacts;
 use SanderMuller\ModelStats\Introspection\ModelBlueprint;
 use SanderMuller\ModelStats\Introspection\ModelFinder;
@@ -88,7 +88,7 @@ final readonly class AudienceGate
     {
         $declared = $this->declaration($class);
 
-        return $declared instanceof ModelStats
+        return $declared instanceof StatsFor
             && in_array($audience->key, $declared->audiences, strict: true);
     }
 
@@ -106,7 +106,7 @@ final readonly class AudienceGate
 
         $declared = $this->declaration($class);
 
-        return $declared instanceof ModelStats && $declared->label !== null
+        return $declared instanceof StatsFor && $declared->label !== null
             ? $declared->label
             : class_basename($class);
     }
@@ -114,9 +114,9 @@ final readonly class AudienceGate
     /**
      * @param  class-string<Model>  $class
      */
-    private function declaration(string $class): ?ModelStats
+    private function declaration(string $class): ?StatsFor
     {
-        $attributes = new ReflectionClass($class)->getAttributes(ModelStats::class);
+        $attributes = new ReflectionClass($class)->getAttributes(StatsFor::class);
 
         return $attributes === [] ? null : $attributes[0]->newInstance();
     }

@@ -3,7 +3,7 @@
 namespace SanderMuller\ModelStats\Introspection;
 
 use Illuminate\Database\Eloquent\Model;
-use SanderMuller\ModelStats\Attributes\PublishedColumn;
+use SanderMuller\ModelStats\Attributes\StatsForColumn;
 use SanderMuller\ModelStats\Audiences\Audience;
 use SanderMuller\ModelStats\Enums\ColumnStatKind;
 
@@ -14,7 +14,7 @@ final readonly class ModelBlueprint
      * @param  list<ColumnFacts>  $columns
      * @param  list<RelationFacts>  $relations
      * @param  list<string>  $audiences  Audience keys a `#[ModelStats]` attribute published this to.
-     * @param  array<string, PublishedColumn>  $publishedColumns  Column name => its attribute.
+     * @param  array<string, StatsForColumn>  $publishedColumns  Column name => its attribute.
      */
     public function __construct(
         public string $class,

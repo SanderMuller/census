@@ -13,8 +13,8 @@ use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionNamedType;
-use SanderMuller\ModelStats\Attributes\ModelStats;
-use SanderMuller\ModelStats\Attributes\PublishedColumn;
+use SanderMuller\ModelStats\Attributes\StatsFor;
+use SanderMuller\ModelStats\Attributes\StatsForColumn;
 use SanderMuller\ModelStats\Enums\ColumnStatKind;
 use Throwable;
 
@@ -51,7 +51,7 @@ final readonly class ModelInspector
 
         $reflection = new ReflectionClass($class);
         $published = $this->publishedColumns($reflection);
-        $declared = ($reflection->getAttributes(ModelStats::class)[0] ?? null)?->newInstance();
+        $declared = ($reflection->getAttributes(StatsFor::class)[0] ?? null)?->newInstance();
 
         return new ModelBlueprint(
             class: $class,
@@ -71,12 +71,12 @@ final readonly class ModelInspector
 
     /**
      * @param  ReflectionClass<Model>  $reflection
-     * @return array<string, PublishedColumn>
+     * @return array<string, StatsForColumn>
      */
     private function publishedColumns(ReflectionClass $reflection): array
     {
         $published = [];
-        foreach ($reflection->getAttributes(PublishedColumn::class) as $attribute) {
+        foreach ($reflection->getAttributes(StatsForColumn::class) as $attribute) {
             $instance = $attribute->newInstance();
             $published[$instance->name] = $instance;
         }
