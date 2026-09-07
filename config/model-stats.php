@@ -117,6 +117,26 @@ return [
         'blacklist' => [],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboards
+    |--------------------------------------------------------------------------
+    |
+    | Where the code-defined dashboards live, discovered the way models are.
+    |
+    | `page_budget_ms` caps a whole dashboard render rather than one stat. A page
+    | holding several models would otherwise multiply the per-stat cap below.
+    | When the budget is spent the remaining cards render as skipped, and a
+    | partial result is never cached.
+    |
+    */
+
+    'dashboard_roots' => [
+        'App\\ModelStats\\Dashboards\\' => app_path('ModelStats/Dashboards'),
+    ],
+
+    'page_budget_ms' => 15000,
+
     'timeout_ms' => 3000,
     'breakdown_limit' => 25,
     'cache_minutes' => 15,

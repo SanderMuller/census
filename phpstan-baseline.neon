@@ -7,6 +7,48 @@ parameters:
 			path: src/Audiences/AudienceResolver.php
 
 		-
+			rawMessage: 'Dynamic call to static method Illuminate\Database\Eloquent\Builder<SanderMuller\ModelStats\Dashboards\UserDashboard>::exists().'
+			identifier: staticMethod.dynamicCall
+			count: 1
+			path: src/Dashboards/UserDashboards.php
+
+		-
+			rawMessage: 'Dynamic call to static method Illuminate\Database\Eloquent\Builder<SanderMuller\ModelStats\Dashboards\UserDashboard>::orderBy().'
+			identifier: staticMethod.dynamicCall
+			count: 1
+			path: src/Dashboards/UserDashboards.php
+
+		-
+			rawMessage: Cannot cast mixed to string.
+			identifier: cast.string
+			count: 1
+			path: src/Http/Controllers/ManageUserDashboardController.php
+
+		-
+			rawMessage: 'Dynamic call to static method Illuminate\Http\Request::validate().'
+			identifier: staticMethod.dynamicCall
+			count: 1
+			path: src/Http/Controllers/ManageUserDashboardController.php
+
+		-
+			rawMessage: Provide more specific return type "Illuminate\View\View" over abstract one
+			identifier: typePerfect.narrowReturnObjectType
+			count: 2
+			path: src/Http/Controllers/ManageUserDashboardController.php
+
+		-
+			rawMessage: Provide more specific return type "Illuminate\View\View" over abstract one
+			identifier: typePerfect.narrowReturnObjectType
+			count: 1
+			path: src/Http/Controllers/ShowDashboardController.php
+
+		-
+			rawMessage: Provide more specific return type "Illuminate\View\View" over abstract one
+			identifier: typePerfect.narrowReturnObjectType
+			count: 1
+			path: src/Http/Controllers/ShowDashboardIndexController.php
+
+		-
 			rawMessage: Provide more specific return type "Illuminate\View\View" over abstract one
 			identifier: typePerfect.narrowReturnObjectType
 			count: 1
@@ -98,12 +140,6 @@ parameters:
 
 		-
 			rawMessage: 'Parameter #1 $middleware of method Illuminate\Routing\RouteRegistrar::middleware() expects array|string|null, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: src/ModelStatsServiceProvider.php
-
-		-
-			rawMessage: 'Parameter #1 $sourceRoots of class SanderMuller\ModelStats\Introspection\ModelFinder constructor expects array<string, string>, array<mixed> given.'
 			identifier: argument.type
 			count: 1
 			path: src/ModelStatsServiceProvider.php

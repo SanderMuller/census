@@ -4,7 +4,13 @@ namespace SanderMuller\ModelStats;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use SanderMuller\ModelStats\Audiences\AudienceGate;
 use SanderMuller\ModelStats\Audiences\AudienceResolver;
+use SanderMuller\ModelStats\Dashboards\DashboardRegistry;
+use SanderMuller\ModelStats\Dashboards\DashboardRenderer;
+use SanderMuller\ModelStats\Http\Controllers\ManageUserDashboardController;
+use SanderMuller\ModelStats\Http\Controllers\ShowDashboardController;
+use SanderMuller\ModelStats\Http\Controllers\ShowDashboardIndexController;
 use SanderMuller\ModelStats\Http\Controllers\ShowModelStatsController;
 use SanderMuller\ModelStats\Http\Controllers\ShowModelStatsIndexController;
 use SanderMuller\ModelStats\Integrations\NovaResourceLocator;
@@ -23,7 +29,7 @@ final class ModelStatsServiceProvider extends ServiceProvider
         $this->app->singleton(
             ModelFinder::class,
             fn (): ModelFinder => new ModelFinder(
-                $this->settingArray('source_roots'),
+                $this->settingMap('source_roots'),
                 $this->settingList('models.whitelist'),
                 $this->settingList('models.blacklist'),
             ),
@@ -46,6 +52,22 @@ final class ModelStatsServiceProvider extends ServiceProvider
             fn (): NovaResourceLocator => new NovaResourceLocator(
                 $this->settingList('nova.namespaces'),
                 (string) config('nova.path', '/nova'),
+            ),
+        );
+
+        $this->app->singleton(
+            DashboardRegistry::class,
+            fn (): DashboardRegistry => new DashboardRegistry($this->settingMap('dashboard_roots')),
+        );
+
+        $this->app->bind(
+            DashboardRenderer::class,
+            fn (): DashboardRenderer => new DashboardRenderer(
+                $this->app->make(ModelFinder::class),
+                $this->app->make(ModelInspector::class),
+                $this->app->make(StatCalculator::class),
+                $this->app->make(AudienceGate::class),
+                (int) (is_numeric($p = $this->setting('page_budget_ms', 15000)) ? $p : 15000),
             ),
         );
 
@@ -89,6 +111,24 @@ final class ModelStatsServiceProvider extends ServiceProvider
     }
 
     /**
+     * Namespace prefix => directory, with anything malformed dropped rather than reaching a `Finder`
+     * that would fail on it.
+     *
+     * @return array<string, string>
+     */
+    private function settingMap(string $key): array
+    {
+        $map = [];
+        foreach ($this->settingArray($key) as $prefix => $directory) {
+            if (is_string($prefix) && is_string($directory)) {
+                $map[$prefix] = $directory;
+            }
+        }
+
+        return $map;
+    }
+
+    /**
      * @return list<string>
      */
     private function settingList(string $key): array
@@ -102,10 +142,14 @@ final class ModelStatsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadViewsFrom($this->viewPath(), self::CONFIG_KEY);
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         if ($this->app->runningInConsole()) {
             $this->publishes([$this->configPath() => config_path('model-stats.php')], 'model-stats-config');
             $this->publishes([$this->viewPath() => resource_path('views/vendor/model-stats')], 'model-stats-views');
+            $this->publishes([
+                __DIR__ . '/../database/migrations' => database_path('migrations'),
+            ], 'model-stats-migrations');
         }
 
         if ($this->setting('route.enabled', true) === true) {
@@ -125,6 +169,18 @@ final class ModelStatsServiceProvider extends ServiceProvider
             ->middleware($this->setting('route.middleware', ['web']))
             ->group(function (): void {
                 Route::get('/', ShowModelStatsIndexController::class)->name('index');
+
+                // Ahead of the `{model}` catch-all below, which matches any single segment and would
+                // otherwise resolve `/dashboards` as a model slug. This order is load-bearing;
+                // `DashboardRoutingTest` pins it.
+                Route::get('dashboards', ShowDashboardIndexController::class)->name('dashboards.index');
+                Route::get('dashboards/create', [ManageUserDashboardController::class, 'create'])->name('dashboards.create');
+                Route::post('dashboards', [ManageUserDashboardController::class, 'store'])->name('dashboards.store');
+                Route::get('dashboards/{dashboard}/edit', [ManageUserDashboardController::class, 'edit'])->name('dashboards.edit');
+                Route::put('dashboards/{dashboard}', [ManageUserDashboardController::class, 'update'])->name('dashboards.update');
+                Route::delete('dashboards/{dashboard}', [ManageUserDashboardController::class, 'destroy'])->name('dashboards.destroy');
+                Route::get('dashboards/{dashboard}', ShowDashboardController::class)->name('dashboards.show');
+
                 Route::get('{model}', ShowModelStatsController::class)->name('show');
             });
     }
