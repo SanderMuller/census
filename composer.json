@@ -1,0 +1,43 @@
+{
+    "name": "sandermuller/laravel-model-stats",
+    "description": "Turns an application's Eloquent schema into a dashboard, without configuring a single metric.",
+    "keywords": [
+        "sandermuller",
+        "laravel",
+        "eloquent",
+        "stats",
+        "dashboard"
+    ],
+    "homepage": "https://github.com/sandermuller/laravel-model-stats",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Sander Muller",
+            "email": "sander.muller@dias.nl",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.4",
+        "illuminate/contracts": "^12.0||^13.0",
+        "illuminate/support": "^12.0||^13.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "SanderMuller\\ModelStats\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SanderMuller\\ModelStats\\ModelStatsServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
