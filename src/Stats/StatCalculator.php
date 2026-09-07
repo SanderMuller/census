@@ -125,8 +125,8 @@ final readonly class StatCalculator
 
         try {
             $row = $this->baseQuery($blueprint)->selectRaw(implode(', ', $selects))->first();
-        } catch (Throwable $e) {
-            return Stat::unavailable(self::GROUP_COLUMNS, $label, $this->reason($e));
+        } catch (Throwable $throwable) {
+            return Stat::unavailable(self::GROUP_COLUMNS, $label, $this->reason($throwable));
         }
 
         if ($row === null) {
@@ -237,8 +237,8 @@ final readonly class StatCalculator
 
         try {
             $value = DB::connection($blueprint->connection)->table($relation->pivotTable)->count();
-        } catch (Throwable $e) {
-            return Stat::unavailable(self::GROUP_RELATIONS, $label, $this->reason($e));
+        } catch (Throwable $throwable) {
+            return Stat::unavailable(self::GROUP_RELATIONS, $label, $this->reason($throwable));
         }
 
         return new Stat(self::GROUP_RELATIONS, $label, $value);
@@ -269,8 +269,8 @@ final readonly class StatCalculator
     ): Stat {
         try {
             return new Stat($group, $label, $constrain($this->query($blueprint))->count());
-        } catch (Throwable $e) {
-            return Stat::unavailable($group, $label, $this->reason($e));
+        } catch (Throwable $throwable) {
+            return Stat::unavailable($group, $label, $this->reason($throwable));
         }
     }
 
@@ -291,8 +291,8 @@ final readonly class StatCalculator
                 ->orderByDesc('aggregate')
                 ->limit($this->breakdownLimit + 1)
                 ->get();
-        } catch (Throwable $e) {
-            return Stat::unavailable($group, $label, $this->reason($e));
+        } catch (Throwable $throwable) {
+            return Stat::unavailable($group, $label, $this->reason($throwable));
         }
 
         $truncated = $rows->count() > $this->breakdownLimit;

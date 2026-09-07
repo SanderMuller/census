@@ -2,10 +2,10 @@
 
 namespace SanderMuller\ModelStats\Http\Controllers;
 
-use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Date;
 use SanderMuller\ModelStats\Audiences\Audience;
 use SanderMuller\ModelStats\Audiences\AudienceGate;
 use SanderMuller\ModelStats\Audiences\AudienceResolver;
@@ -69,7 +69,7 @@ final readonly class ShowModelStatsController
             'blueprint' => $blueprint,
             'audience' => $audience,
             'groups' => collect($cached['stats'])->groupBy(static fn (Stat $stat): string => $stat->group),
-            'calculatedAt' => Carbon::parse($cached['calculated_at']),
+            'calculatedAt' => Date::parse($cached['calculated_at']),
             'novaUrl' => $audience->readsSchema ? $this->novaLocator->urlFor($reference->class) : null,
         ]);
     }
