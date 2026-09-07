@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Introspection;
+namespace SanderMuller\Census\Introspection;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use ReflectionClass;
-use SanderMuller\ModelStats\Attributes\StatsExclude;
-use SanderMuller\ModelStats\Attributes\StatsInclude;
-use SanderMuller\ModelStats\Selection\Selector;
+use SanderMuller\Census\Attributes\StatsExclude;
+use SanderMuller\Census\Attributes\StatsInclude;
+use SanderMuller\Census\Selection\Selector;
 use Symfony\Component\Finder\Finder;
 use Throwable;
 

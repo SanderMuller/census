@@ -1,4 +1,4 @@
-@extends('model-stats::layout', ['title' => 'Model stats'])
+@extends('census::layout', ['title' => 'Model stats'])
 
 @section('content')
     <div class="ms-bar">
@@ -43,7 +43,7 @@
                 <tr data-filter="{{ Str::lower($model['name'] . ' ' . $model['table']) }}"
                     x-show="filter === '' || $el.dataset.filter.includes(filter.toLowerCase())">
                     <td>
-                        <a href="{{ route(config('model-stats.route.name') . 'show', ['model' => $model['slug']]) }}">
+                        <a href="{{ route(config('census.route.name') . 'show', ['model' => $model['slug']]) }}">
                             {{ $model['name'] }}
                         </a>
                     </td>

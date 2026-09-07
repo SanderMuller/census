@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Selection;
+namespace SanderMuller\Census\Selection;
 
 /**
  * The resolution rule, in one place, applied identically to models, columns and relations.

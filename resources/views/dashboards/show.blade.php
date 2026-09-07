@@ -1,7 +1,7 @@
-@extends('model-stats::layout', ['title' => $name])
+@extends('census::layout', ['title' => $name])
 
 @php
-    $routeName = config('model-stats.route.name');
+    $routeName = config('census.route.name');
 @endphp
 
 @section('content')
@@ -49,7 +49,7 @@
 
         <div class="ms-grid">
             @foreach($stats as $stat)
-                @include('model-stats::partials.stat-card', ['stat' => $stat])
+                @include('census::partials.stat-card', ['stat' => $stat])
             @endforeach
         </div>
     @endforeach

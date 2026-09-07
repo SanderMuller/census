@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Audiences;
+namespace SanderMuller\Census\Audiences;
 
 use Illuminate\Support\Facades\Gate;
 

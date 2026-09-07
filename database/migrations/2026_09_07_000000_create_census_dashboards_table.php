@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('model_stats_dashboards', function (Blueprint $table): void {
+        Schema::create('census_dashboards', function (Blueprint $table): void {
             $table->id();
             $table->string('slug')->unique();
             $table->string('name');
@@ -25,6 +25,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('model_stats_dashboards');
+        Schema::dropIfExists('census_dashboards');
     }
 };

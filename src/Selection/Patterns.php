@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Selection;
+namespace SanderMuller\Census\Selection;
 
 use Illuminate\Support\Str;
 

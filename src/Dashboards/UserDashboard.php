@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Dashboards;
+namespace SanderMuller\Census\Dashboards;
 
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
@@ -19,7 +19,7 @@ use InvalidArgumentException;
  */
 final class UserDashboard extends Model
 {
-    protected $table = 'model_stats_dashboards';
+    protected $table = 'census_dashboards';
 
     protected $guarded = [];
 

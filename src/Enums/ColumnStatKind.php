@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Enums;
+namespace SanderMuller\Census\Enums;
 
 /**
  * Which stat a column earns, and — just as important — how many queries it costs.

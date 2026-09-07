@@ -1,26 +1,26 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats;
+namespace SanderMuller\Census;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use SanderMuller\ModelStats\Audiences\AudienceGate;
-use SanderMuller\ModelStats\Audiences\AudienceResolver;
-use SanderMuller\ModelStats\Dashboards\DashboardRegistry;
-use SanderMuller\ModelStats\Dashboards\DashboardRenderer;
-use SanderMuller\ModelStats\Http\Controllers\ManageUserDashboardController;
-use SanderMuller\ModelStats\Http\Controllers\ShowDashboardController;
-use SanderMuller\ModelStats\Http\Controllers\ShowDashboardIndexController;
-use SanderMuller\ModelStats\Http\Controllers\ShowModelStatsController;
-use SanderMuller\ModelStats\Http\Controllers\ShowModelStatsIndexController;
-use SanderMuller\ModelStats\Integrations\NovaResourceLocator;
-use SanderMuller\ModelStats\Introspection\ModelFinder;
-use SanderMuller\ModelStats\Introspection\ModelInspector;
-use SanderMuller\ModelStats\Stats\StatCalculator;
+use SanderMuller\Census\Audiences\AudienceGate;
+use SanderMuller\Census\Audiences\AudienceResolver;
+use SanderMuller\Census\Dashboards\DashboardRegistry;
+use SanderMuller\Census\Dashboards\DashboardRenderer;
+use SanderMuller\Census\Http\Controllers\ManageUserDashboardController;
+use SanderMuller\Census\Http\Controllers\ShowDashboardController;
+use SanderMuller\Census\Http\Controllers\ShowDashboardIndexController;
+use SanderMuller\Census\Http\Controllers\ShowModelController;
+use SanderMuller\Census\Http\Controllers\ShowModelIndexController;
+use SanderMuller\Census\Integrations\NovaResourceLocator;
+use SanderMuller\Census\Introspection\ModelFinder;
+use SanderMuller\Census\Introspection\ModelInspector;
+use SanderMuller\Census\Stats\StatCalculator;
 
-final class ModelStatsServiceProvider extends ServiceProvider
+final class CensusServiceProvider extends ServiceProvider
 {
-    private const string CONFIG_KEY = 'model-stats';
+    private const string CONFIG_KEY = 'census';
 
     public function register(): void
     {
@@ -145,11 +145,11 @@ final class ModelStatsServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         if ($this->app->runningInConsole()) {
-            $this->publishes([$this->configPath() => config_path('model-stats.php')], 'model-stats-config');
-            $this->publishes([$this->viewPath() => resource_path('views/vendor/model-stats')], 'model-stats-views');
+            $this->publishes([$this->configPath() => config_path('census.php')], 'census-config');
+            $this->publishes([$this->viewPath() => resource_path('views/vendor/census')], 'census-views');
             $this->publishes([
                 __DIR__ . '/../database/migrations' => database_path('migrations'),
-            ], 'model-stats-migrations');
+            ], 'census-migrations');
         }
 
         if ($this->setting('route.enabled', true) === true) {
@@ -164,11 +164,11 @@ final class ModelStatsServiceProvider extends ServiceProvider
     private function registerRoutes(): void
     {
         Route::domain($this->setting('route.domain'))
-            ->prefix((string) $this->setting('route.prefix', 'model-stats'))
-            ->name((string) $this->setting('route.name', 'model-stats.'))
+            ->prefix((string) $this->setting('route.prefix', 'census'))
+            ->name((string) $this->setting('route.name', 'census.'))
             ->middleware($this->setting('route.middleware', ['web']))
             ->group(function (): void {
-                Route::get('/', ShowModelStatsIndexController::class)->name('index');
+                Route::get('/', ShowModelIndexController::class)->name('index');
 
                 // Ahead of the `{model}` catch-all below, which matches any single segment and would
                 // otherwise resolve `/dashboards` as a model slug. This order is load-bearing;
@@ -181,7 +181,7 @@ final class ModelStatsServiceProvider extends ServiceProvider
                 Route::delete('dashboards/{dashboard}', [ManageUserDashboardController::class, 'destroy'])->name('dashboards.destroy');
                 Route::get('dashboards/{dashboard}', ShowDashboardController::class)->name('dashboards.show');
 
-                Route::get('{model}', ShowModelStatsController::class)->name('show');
+                Route::get('{model}', ShowModelController::class)->name('show');
             });
     }
 
@@ -192,7 +192,7 @@ final class ModelStatsServiceProvider extends ServiceProvider
 
     private function configPath(): string
     {
-        return __DIR__ . '/../config/model-stats.php';
+        return __DIR__ . '/../config/census.php';
     }
 
     private function viewPath(): string

@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Dashboards;
+namespace SanderMuller\Census\Dashboards;
 
-use SanderMuller\ModelStats\Stats\Stat;
+use SanderMuller\Census\Stats\Stat;
 
 /**
  * Cards plus whether the page finished inside its budget. `$complete` is what decides cacheability:

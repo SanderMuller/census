@@ -1,7 +1,7 @@
-@extends('model-stats::layout', ['title' => $dashboard === null ? 'New dashboard' : 'Edit ' . $dashboard->name])
+@extends('census::layout', ['title' => $dashboard === null ? 'New dashboard' : 'Edit ' . $dashboard->name])
 
 @php
-    $routeName = config('model-stats.route.name');
+    $routeName = config('census.route.name');
     $isNew = $dashboard === null;
 @endphp
 

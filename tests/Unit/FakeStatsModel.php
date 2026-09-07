@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Tests\Unit;
+namespace SanderMuller\Census\Tests\Unit;
 
 use Illuminate\Database\Eloquent\Model;
 

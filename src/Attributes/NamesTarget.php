@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Attributes;
+namespace SanderMuller\Census\Attributes;
 
 /**
  * Implemented by every attribute that names one column or relation. Reflection hands back

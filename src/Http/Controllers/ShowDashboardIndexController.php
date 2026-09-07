@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Http\Controllers;
+namespace SanderMuller\Census\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
-use SanderMuller\ModelStats\Audiences\Audience;
-use SanderMuller\ModelStats\Audiences\AudienceResolver;
-use SanderMuller\ModelStats\Dashboards\DashboardRegistry;
-use SanderMuller\ModelStats\Dashboards\UserDashboards;
+use SanderMuller\Census\Audiences\Audience;
+use SanderMuller\Census\Audiences\AudienceResolver;
+use SanderMuller\Census\Dashboards\DashboardRegistry;
+use SanderMuller\Census\Dashboards\UserDashboards;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 final readonly class ShowDashboardIndexController
@@ -21,7 +21,7 @@ final readonly class ShowDashboardIndexController
     {
         $audience = $this->audiences->resolve();
         if (! $audience instanceof Audience) {
-            throw new AccessDeniedHttpException('No model-stats audience covers this user.');
+            throw new AccessDeniedHttpException('No census audience covers this user.');
         }
 
         $fixed = [];
@@ -40,7 +40,7 @@ final readonly class ShowDashboardIndexController
         }
 
         // Fixed dashboards first; the user ones join this list once they exist.
-        return view('model-stats::dashboards.index', [
+        return view('census::dashboards.index', [
             'audience' => $audience,
             'fixed' => $fixed,
             'userDashboards' => $this->store->openableBy($audience),

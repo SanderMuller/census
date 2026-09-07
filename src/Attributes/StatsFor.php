@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Attributes;
+namespace SanderMuller\Census\Attributes;
 
 use Attribute;
 
@@ -14,7 +14,7 @@ use Attribute;
 final readonly class StatsFor
 {
     /**
-     * @param  list<string>  $audiences  Audience keys from `model-stats.audiences`.
+     * @param  list<string>  $audiences  Audience keys from `census.audiences`.
      */
     public function __construct(
         public ?string $label = null,

@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Tests\Unit;
+namespace SanderMuller\Census\Tests\Unit;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use SanderMuller\ModelStats\Selection\Selector;
+use SanderMuller\Census\Selection\Selector;
 
 /**
  * The resolution rule decides what the package can see at all, so each property it promises gets its

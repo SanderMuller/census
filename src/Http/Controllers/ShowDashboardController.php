@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Http\Controllers;
+namespace SanderMuller\Census\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
-use SanderMuller\ModelStats\Audiences\Audience;
-use SanderMuller\ModelStats\Audiences\AudienceResolver;
-use SanderMuller\ModelStats\Dashboards\Dashboard;
-use SanderMuller\ModelStats\Dashboards\DashboardRegistry;
-use SanderMuller\ModelStats\Dashboards\DashboardRenderer;
-use SanderMuller\ModelStats\Dashboards\UserDashboard;
-use SanderMuller\ModelStats\Dashboards\UserDashboards;
-use SanderMuller\ModelStats\Stats\Stat;
+use SanderMuller\Census\Audiences\Audience;
+use SanderMuller\Census\Audiences\AudienceResolver;
+use SanderMuller\Census\Dashboards\Dashboard;
+use SanderMuller\Census\Dashboards\DashboardRegistry;
+use SanderMuller\Census\Dashboards\DashboardRenderer;
+use SanderMuller\Census\Dashboards\UserDashboard;
+use SanderMuller\Census\Dashboards\UserDashboards;
+use SanderMuller\Census\Stats\Stat;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -27,7 +27,7 @@ final readonly class ShowDashboardController
     {
         $audience = $this->audiences->resolve();
         if (! $audience instanceof Audience) {
-            throw new AccessDeniedHttpException('No model-stats audience covers this user.');
+            throw new AccessDeniedHttpException('No census audience covers this user.');
         }
 
         // Fixed slugs win, so a fixed dashboard is looked up first even though the two share one
@@ -66,7 +66,7 @@ final readonly class ShowDashboardController
             throw new NotFoundHttpException("No dashboard matches the slug [{$dashboard}].");
         }
 
-        return view('model-stats::dashboards.show', [
+        return view('census::dashboards.show', [
             'audience' => $audience,
             'slug' => $dashboard,
             'name' => $name,

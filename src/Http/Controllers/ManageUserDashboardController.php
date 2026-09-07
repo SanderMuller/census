@@ -1,20 +1,20 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Http\Controllers;
+namespace SanderMuller\Census\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
-use SanderMuller\ModelStats\Audiences\Audience;
-use SanderMuller\ModelStats\Audiences\AudienceResolver;
-use SanderMuller\ModelStats\Dashboards\Dashboard;
-use SanderMuller\ModelStats\Dashboards\DashboardRegistry;
-use SanderMuller\ModelStats\Dashboards\DashboardRenderer;
-use SanderMuller\ModelStats\Dashboards\StatReference;
-use SanderMuller\ModelStats\Dashboards\UserDashboard;
-use SanderMuller\ModelStats\Dashboards\UserDashboards;
+use SanderMuller\Census\Audiences\Audience;
+use SanderMuller\Census\Audiences\AudienceResolver;
+use SanderMuller\Census\Dashboards\Dashboard;
+use SanderMuller\Census\Dashboards\DashboardRegistry;
+use SanderMuller\Census\Dashboards\DashboardRenderer;
+use SanderMuller\Census\Dashboards\StatReference;
+use SanderMuller\Census\Dashboards\UserDashboard;
+use SanderMuller\Census\Dashboards\UserDashboards;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
@@ -45,7 +45,7 @@ final readonly class ManageUserDashboardController
         $audience = $this->audience();
         $this->assertAvailable();
 
-        return view('model-stats::dashboards.form', [
+        return view('census::dashboards.form', [
             'audience' => $audience,
             'dashboard' => null,
             'audienceChoices' => $this->grantableBy($audience),
@@ -77,7 +77,7 @@ final readonly class ManageUserDashboardController
         $audience = $this->audience();
         $found = $this->mutable($dashboard, $audience);
 
-        return view('model-stats::dashboards.form', [
+        return view('census::dashboards.form', [
             'audience' => $audience,
             'dashboard' => $found,
             'audienceChoices' => $this->grantableBy($audience),
@@ -249,7 +249,7 @@ final readonly class ManageUserDashboardController
     {
         $audience = $this->audiences->resolve();
         if (! $audience instanceof Audience) {
-            throw new AccessDeniedHttpException('No model-stats audience covers this user.');
+            throw new AccessDeniedHttpException('No census audience covers this user.');
         }
 
         return $audience;
@@ -260,13 +260,13 @@ final readonly class ManageUserDashboardController
         if (! $this->store->isAvailable()) {
             throw new ServiceUnavailableHttpException(
                 null,
-                'User dashboards need the model-stats migration to have run.',
+                'User dashboards need the census migration to have run.',
             );
         }
     }
 
     private function routeName(): string
     {
-        return (string) config('model-stats.route.name', 'model-stats.');
+        return (string) config('census.route.name', 'census.');
     }
 }

@@ -1,18 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Dashboards;
+namespace SanderMuller\Census\Dashboards;
 
 use Illuminate\Database\Eloquent\Model;
-use SanderMuller\ModelStats\Audiences\Audience;
-use SanderMuller\ModelStats\Audiences\AudienceGate;
-use SanderMuller\ModelStats\Enums\ColumnStatKind;
-use SanderMuller\ModelStats\Introspection\ColumnFacts;
-use SanderMuller\ModelStats\Introspection\ModelBlueprint;
-use SanderMuller\ModelStats\Introspection\ModelFinder;
-use SanderMuller\ModelStats\Introspection\ModelInspector;
-use SanderMuller\ModelStats\Introspection\RelationFacts;
-use SanderMuller\ModelStats\Stats\Stat;
-use SanderMuller\ModelStats\Stats\StatCalculator;
+use SanderMuller\Census\Audiences\Audience;
+use SanderMuller\Census\Audiences\AudienceGate;
+use SanderMuller\Census\Enums\ColumnStatKind;
+use SanderMuller\Census\Introspection\ColumnFacts;
+use SanderMuller\Census\Introspection\ModelBlueprint;
+use SanderMuller\Census\Introspection\ModelFinder;
+use SanderMuller\Census\Introspection\ModelInspector;
+use SanderMuller\Census\Introspection\RelationFacts;
+use SanderMuller\Census\Stats\Stat;
+use SanderMuller\Census\Stats\StatCalculator;
 use Throwable;
 
 /**

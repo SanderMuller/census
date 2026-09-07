@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Audiences;
+namespace SanderMuller\Census\Audiences;
 
 use Illuminate\Database\Eloquent\Model;
 use ReflectionClass;
-use SanderMuller\ModelStats\Attributes\StatsFor;
-use SanderMuller\ModelStats\Introspection\ColumnFacts;
-use SanderMuller\ModelStats\Introspection\ModelBlueprint;
-use SanderMuller\ModelStats\Introspection\ModelFinder;
-use SanderMuller\ModelStats\Introspection\ModelReference;
+use SanderMuller\Census\Attributes\StatsFor;
+use SanderMuller\Census\Introspection\ColumnFacts;
+use SanderMuller\Census\Introspection\ModelBlueprint;
+use SanderMuller\Census\Introspection\ModelFinder;
+use SanderMuller\Census\Introspection\ModelReference;
 
 /**
  * Narrows what an audience may read, before a single stat is calculated.

@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Dashboards;
+namespace SanderMuller\Census\Dashboards;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Facades\Schema;
-use SanderMuller\ModelStats\Audiences\Audience;
+use SanderMuller\Census\Audiences\Audience;
 use Throwable;
 
 /**

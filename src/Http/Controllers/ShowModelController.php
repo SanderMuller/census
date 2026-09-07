@@ -1,22 +1,22 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Http\Controllers;
+namespace SanderMuller\Census\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use SanderMuller\ModelStats\Audiences\Audience;
-use SanderMuller\ModelStats\Audiences\AudienceGate;
-use SanderMuller\ModelStats\Audiences\AudienceResolver;
-use SanderMuller\ModelStats\Integrations\NovaResourceLocator;
-use SanderMuller\ModelStats\Introspection\ModelFinder;
-use SanderMuller\ModelStats\Introspection\ModelInspector;
-use SanderMuller\ModelStats\Introspection\ModelReference;
-use SanderMuller\ModelStats\Stats\Stat;
-use SanderMuller\ModelStats\Stats\StatCalculator;
+use SanderMuller\Census\Audiences\Audience;
+use SanderMuller\Census\Audiences\AudienceGate;
+use SanderMuller\Census\Audiences\AudienceResolver;
+use SanderMuller\Census\Integrations\NovaResourceLocator;
+use SanderMuller\Census\Introspection\ModelFinder;
+use SanderMuller\Census\Introspection\ModelInspector;
+use SanderMuller\Census\Introspection\ModelReference;
+use SanderMuller\Census\Stats\Stat;
+use SanderMuller\Census\Stats\StatCalculator;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-final readonly class ShowModelStatsController
+final readonly class ShowModelController
 {
     public function __construct(
         private ModelFinder $finder,
@@ -31,7 +31,7 @@ final readonly class ShowModelStatsController
     {
         $audience = $this->audiences->resolve();
         if (! $audience instanceof Audience) {
-            throw new AccessDeniedHttpException('No model-stats audience covers this user.');
+            throw new AccessDeniedHttpException('No census audience covers this user.');
         }
 
         $reference = $this->finder->findBySlug($model);
@@ -51,7 +51,7 @@ final readonly class ShowModelStatsController
 
         $cached = $this->calculator->cached($blueprint, $audience->key, $request->query('fresh') !== null);
 
-        return view('model-stats::show', [
+        return view('census::show', [
             'blueprint' => $blueprint,
             'audience' => $audience,
             'groups' => collect($cached->stats)->groupBy(static fn (Stat $stat): string => $stat->group),

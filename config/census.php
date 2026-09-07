@@ -29,8 +29,8 @@ return [
 
     'route' => [
         'enabled' => true,
-        'prefix' => 'model-stats',
-        'name' => 'model-stats.',
+        'prefix' => 'census',
+        'name' => 'census.',
         'domain' => null,
         'middleware' => ['web'],
     ],
@@ -132,7 +132,7 @@ return [
     */
 
     'dashboard_roots' => [
-        'App\\ModelStats\\Dashboards\\' => app_path('ModelStats/Dashboards'),
+        'App\\Census\\Dashboards\\' => app_path('Census/Dashboards'),
     ],
 
     'page_budget_ms' => 15000,

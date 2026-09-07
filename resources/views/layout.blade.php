@@ -1,6 +1,6 @@
 {{--
     A host application that wants the dashboard inside its own chrome publishes the views
-    (`vendor:publish --tag=model-stats-views`) and replaces this file. Everything else keeps working,
+    (`vendor:publish --tag=census-views`) and replaces this file. Everything else keeps working,
     because the pages only ever yield into `content`.
 --}}
 <!DOCTYPE html>

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Stats;
+namespace SanderMuller\Census\Stats;
 
 use BackedEnum;
 use Carbon\Carbon;
@@ -10,10 +10,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use SanderMuller\ModelStats\Enums\ColumnStatKind;
-use SanderMuller\ModelStats\Introspection\ColumnFacts;
-use SanderMuller\ModelStats\Introspection\ModelBlueprint;
-use SanderMuller\ModelStats\Introspection\RelationFacts;
+use SanderMuller\Census\Enums\ColumnStatKind;
+use SanderMuller\Census\Introspection\ColumnFacts;
+use SanderMuller\Census\Introspection\ModelBlueprint;
+use SanderMuller\Census\Introspection\RelationFacts;
 use Throwable;
 
 /**
@@ -45,7 +45,7 @@ final readonly class StatCalculator
      */
     public function cached(ModelBlueprint $blueprint, string $audienceKey, bool $fresh = false): CachedStats
     {
-        $key = "model-stats.{$audienceKey}.{$blueprint->slug}";
+        $key = "census.{$audienceKey}.{$blueprint->slug}";
 
         if ($fresh) {
             Cache::forget($key);

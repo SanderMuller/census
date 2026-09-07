@@ -1,6 +1,6 @@
 {
-    "name": "sandermuller/laravel-model-stats",
-    "description": "Turns an application's Eloquent schema into a dashboard, without configuring a single metric.",
+    "name": "sandermuller/census",
+    "description": "Counts what an application's Eloquent models hold, and reports it, without configuring a single metric.",
     "keywords": [
         "sandermuller",
         "laravel",
@@ -8,7 +8,7 @@
         "stats",
         "dashboard"
     ],
-    "homepage": "https://github.com/sandermuller/laravel-model-stats",
+    "homepage": "https://github.com/sandermuller/census",
     "license": "MIT",
     "type": "library",
     "authors": [
@@ -25,13 +25,13 @@
     },
     "autoload": {
         "psr-4": {
-            "SanderMuller\\ModelStats\\": "src/"
+            "SanderMuller\\Census\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "SanderMuller\\ModelStats\\ModelStatsServiceProvider"
+                "SanderMuller\\Census\\CensusServiceProvider"
             ]
         }
     },
@@ -65,7 +65,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "SanderMuller\\ModelStats\\Tests\\": "tests/",
+            "SanderMuller\\Census\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },

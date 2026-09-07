@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Stats;
+namespace SanderMuller\Census\Stats;
 
 final readonly class Stat
 {

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Dashboards;
+namespace SanderMuller\Census\Dashboards;
 
 /**
  * Which stat a reference points at. `Total` and `Booleans` describe the whole table, so they carry no

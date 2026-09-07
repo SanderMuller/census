@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Integrations;
+namespace SanderMuller\Census\Integrations;
 
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Nova\Resource;

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Introspection;
+namespace SanderMuller\Census\Introspection;
 
 use Illuminate\Database\Eloquent\Model;
 

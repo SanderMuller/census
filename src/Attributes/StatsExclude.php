@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Attributes;
+namespace SanderMuller\Census\Attributes;
 
 use Attribute;
 

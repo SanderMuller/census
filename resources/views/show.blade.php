@@ -1,7 +1,7 @@
-@extends('model-stats::layout', ['title' => 'Model stats — ' . class_basename($blueprint->class)])
+@extends('census::layout', ['title' => 'Model stats — ' . class_basename($blueprint->class)])
 
 @php
-    $routeName = config('model-stats.route.name');
+    $routeName = config('census.route.name');
 @endphp
 
 @section('content')

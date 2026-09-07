@@ -1,7 +1,7 @@
-@extends('model-stats::layout', ['title' => 'Dashboards'])
+@extends('census::layout', ['title' => 'Dashboards'])
 
 @php
-    $routeName = config('model-stats.route.name');
+    $routeName = config('census.route.name');
 @endphp
 
 @section('content')

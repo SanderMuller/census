@@ -27,13 +27,13 @@ out-build a mature BI tool at its own game.
 ## Installation
 
 ```bash
-composer require sandermuller/laravel-model-stats
+composer require sandermuller/census
 ```
 
 Publish the config to change where models are discovered or who may see what:
 
 ```bash
-php artisan vendor:publish --tag=model-stats-config
+php artisan vendor:publish --tag=census-config
 ```
 
 ## Design notes

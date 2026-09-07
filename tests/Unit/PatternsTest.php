@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Tests\Unit;
+namespace SanderMuller\Census\Tests\Unit;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use SanderMuller\ModelStats\Selection\Patterns;
+use SanderMuller\Census\Selection\Patterns;
 
 final class PatternsTest extends TestCase
 {

@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Tests\Unit;
+namespace SanderMuller\Census\Tests\Unit;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use SanderMuller\ModelStats\Dashboards\StatKind;
-use SanderMuller\ModelStats\Dashboards\StatReference;
+use SanderMuller\Census\Dashboards\StatKind;
+use SanderMuller\Census\Dashboards\StatReference;
 
 /**
  * A reference arrives from a PHP class and from database JSON, so the same validation has to hold on

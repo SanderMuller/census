@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Http\Controllers;
+namespace SanderMuller\Census\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
-use SanderMuller\ModelStats\Audiences\Audience;
-use SanderMuller\ModelStats\Audiences\AudienceGate;
-use SanderMuller\ModelStats\Audiences\AudienceResolver;
+use SanderMuller\Census\Audiences\Audience;
+use SanderMuller\Census\Audiences\AudienceGate;
+use SanderMuller\Census\Audiences\AudienceResolver;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Throwable;
 
-final readonly class ShowModelStatsIndexController
+final readonly class ShowModelIndexController
 {
     public function __construct(
         private AudienceResolver $audiences,
@@ -21,7 +21,7 @@ final readonly class ShowModelStatsIndexController
     {
         $audience = $this->audiences->resolve();
         if (! $audience instanceof Audience) {
-            throw new AccessDeniedHttpException('No model-stats audience covers this user.');
+            throw new AccessDeniedHttpException('No census audience covers this user.');
         }
 
         // A developer reads table names and row estimates; nobody else needs either, and the
@@ -41,7 +41,7 @@ final readonly class ShowModelStatsIndexController
         // Biggest tables first — that is the order a developer scans in, far more than alphabetical.
         usort($models, static fn (array $a, array $b): int => ($b['approximate_rows'] ?? -1) <=> ($a['approximate_rows'] ?? -1));
 
-        return view('model-stats::index', ['models' => $models, 'audience' => $audience]);
+        return view('census::index', ['models' => $models, 'audience' => $audience]);
     }
 
     /**

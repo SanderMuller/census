@@ -7,13 +7,13 @@ parameters:
 			path: src/Audiences/AudienceResolver.php
 
 		-
-			rawMessage: 'Dynamic call to static method Illuminate\Database\Eloquent\Builder<SanderMuller\ModelStats\Dashboards\UserDashboard>::exists().'
+			rawMessage: 'Dynamic call to static method Illuminate\Database\Eloquent\Builder<SanderMuller\Census\Dashboards\UserDashboard>::exists().'
 			identifier: staticMethod.dynamicCall
 			count: 1
 			path: src/Dashboards/UserDashboards.php
 
 		-
-			rawMessage: 'Dynamic call to static method Illuminate\Database\Eloquent\Builder<SanderMuller\ModelStats\Dashboards\UserDashboard>::orderBy().'
+			rawMessage: 'Dynamic call to static method Illuminate\Database\Eloquent\Builder<SanderMuller\Census\Dashboards\UserDashboard>::orderBy().'
 			identifier: staticMethod.dynamicCall
 			count: 1
 			path: src/Dashboards/UserDashboards.php
@@ -52,37 +52,37 @@ parameters:
 			rawMessage: Provide more specific return type "Illuminate\View\View" over abstract one
 			identifier: typePerfect.narrowReturnObjectType
 			count: 1
-			path: src/Http/Controllers/ShowModelStatsController.php
+			path: src/Http/Controllers/ShowModelController.php
 
 		-
 			rawMessage: Cannot access property $table_name on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: src/Http/Controllers/ShowModelStatsIndexController.php
+			path: src/Http/Controllers/ShowModelIndexController.php
 
 		-
 			rawMessage: Cannot access property $table_rows on mixed.
 			identifier: property.nonObject
 			count: 1
-			path: src/Http/Controllers/ShowModelStatsIndexController.php
+			path: src/Http/Controllers/ShowModelIndexController.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
 			count: 1
-			path: src/Http/Controllers/ShowModelStatsIndexController.php
+			path: src/Http/Controllers/ShowModelIndexController.php
 
 		-
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
 			count: 1
-			path: src/Http/Controllers/ShowModelStatsIndexController.php
+			path: src/Http/Controllers/ShowModelIndexController.php
 
 		-
 			rawMessage: Provide more specific return type "Illuminate\View\View" over abstract one
 			identifier: typePerfect.narrowReturnObjectType
 			count: 1
-			path: src/Http/Controllers/ShowModelStatsIndexController.php
+			path: src/Http/Controllers/ShowModelIndexController.php
 
 		-
 			rawMessage: Class Laravel\Nova\Resource not found.
@@ -97,7 +97,7 @@ parameters:
 			path: src/Introspection/ModelFinder.php
 
 		-
-			rawMessage: 'Parameter #2 $tables of method SanderMuller\ModelStats\Introspection\ModelFinder::reference() expects array<string, int>, array<(int|string)> given.'
+			rawMessage: 'Parameter #2 $tables of method SanderMuller\Census\Introspection\ModelFinder::reference() expects array<string, int>, array<(int|string)> given.'
 			identifier: argument.type
 			count: 1
 			path: src/Introspection/ModelFinder.php
@@ -115,13 +115,13 @@ parameters:
 			path: src/Introspection/ModelInspector.php
 
 		-
-			rawMessage: 'Method SanderMuller\ModelStats\Introspection\ModelInspector::softDeleteColumn() should return string|null but returns mixed.'
+			rawMessage: 'Method SanderMuller\Census\Introspection\ModelInspector::softDeleteColumn() should return string|null but returns mixed.'
 			identifier: return.type
 			count: 1
 			path: src/Introspection/ModelInspector.php
 
 		-
-			rawMessage: 'Parameter $foreignKeyName of class SanderMuller\ModelStats\Introspection\RelationFacts constructor expects string|null, mixed given.'
+			rawMessage: 'Parameter $foreignKeyName of class SanderMuller\Census\Introspection\RelationFacts constructor expects string|null, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: src/Introspection/ModelInspector.php
@@ -130,25 +130,25 @@ parameters:
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
 			count: 3
-			path: src/ModelStatsServiceProvider.php
+			path: src/CensusServiceProvider.php
 
 		-
-			rawMessage: 'Parameter #1 $configured of class SanderMuller\ModelStats\Audiences\AudienceResolver constructor expects array<string, array<string, mixed>>, array<mixed> given.'
+			rawMessage: 'Parameter #1 $configured of class SanderMuller\Census\Audiences\AudienceResolver constructor expects array<string, array<string, mixed>>, array<mixed> given.'
 			identifier: argument.type
 			count: 1
-			path: src/ModelStatsServiceProvider.php
+			path: src/CensusServiceProvider.php
 
 		-
 			rawMessage: 'Parameter #1 $middleware of method Illuminate\Routing\RouteRegistrar::middleware() expects array|string|null, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: src/ModelStatsServiceProvider.php
+			path: src/CensusServiceProvider.php
 
 		-
 			rawMessage: 'Parameter #1 $value of static method Illuminate\Support\Facades\Route::domain() expects BackedEnum|string, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: src/ModelStatsServiceProvider.php
+			path: src/CensusServiceProvider.php
 
 		-
 			rawMessage: Cannot cast mixed to int.

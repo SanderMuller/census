@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Introspection;
+namespace SanderMuller\Census\Introspection;
 
 use BackedEnum;
-use SanderMuller\ModelStats\Enums\ColumnStatKind;
+use SanderMuller\Census\Enums\ColumnStatKind;
 
 final readonly class ColumnFacts
 {

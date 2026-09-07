@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SanderMuller\ModelStats\Introspection;
+namespace SanderMuller\Census\Introspection;
 
 use BackedEnum;
 use Deprecated;
@@ -13,17 +13,17 @@ use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionNamedType;
-use SanderMuller\ModelStats\Attributes\NamesTarget;
-use SanderMuller\ModelStats\Attributes\StatsExcludeColumn;
-use SanderMuller\ModelStats\Attributes\StatsExcludeRelation;
-use SanderMuller\ModelStats\Attributes\StatsFor;
-use SanderMuller\ModelStats\Attributes\StatsForColumn;
-use SanderMuller\ModelStats\Attributes\StatsIncludeColumn;
-use SanderMuller\ModelStats\Attributes\StatsIncludeRelation;
-use SanderMuller\ModelStats\Attributes\StatsOptions;
-use SanderMuller\ModelStats\Enums\ColumnStatKind;
-use SanderMuller\ModelStats\Selection\Patterns;
-use SanderMuller\ModelStats\Selection\Selector;
+use SanderMuller\Census\Attributes\NamesTarget;
+use SanderMuller\Census\Attributes\StatsExcludeColumn;
+use SanderMuller\Census\Attributes\StatsExcludeRelation;
+use SanderMuller\Census\Attributes\StatsFor;
+use SanderMuller\Census\Attributes\StatsForColumn;
+use SanderMuller\Census\Attributes\StatsIncludeColumn;
+use SanderMuller\Census\Attributes\StatsIncludeRelation;
+use SanderMuller\Census\Attributes\StatsOptions;
+use SanderMuller\Census\Enums\ColumnStatKind;
+use SanderMuller\Census\Selection\Patterns;
+use SanderMuller\Census\Selection\Selector;
 use Throwable;
 
 /**
